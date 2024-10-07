@@ -13,7 +13,14 @@
 ### Quarto Dashboards
 
   - General reference
-      - <https://quarto.org/docs/dashboards/>
+    - <https://quarto.org/docs/dashboards/>
   - Example workflows using R targets
-      - <https://github.com/tail-Winds/rtwb-flyway>
-      - <https://github.com/mhpob/henrico-planning-agenda>
+    - <https://github.com/tail-Winds/rtwb-flyway>
+    - <https://github.com/mhpob/henrico-planning-agenda>
+
+### Innovasea cabled instrument ASCII output
+
+  - Rx-LIVE
+    - <https://go.innovasea.com/rx_live_receiver_manual.pdf>
+  - VR2C
+    - <https://go.innovasea.com/vr2c_manual.pdf>
