@@ -32,7 +32,11 @@
 
   - Rx-LIVE
     - <https://go.innovasea.com/rx_live_receiver_manual.pdf>
+    - Example poll, no detection logged:
+      - *667057.0#31[0009],OK,#9A\r\n  667057,000,2021-06-01 19:36:21.024,STS,DC=23,PC=190,LV=12.0,T=25.1,DU=0.0,RU=0.0,XYZ=-0.06:0.94:-0.22,N=67.0,NP=39.0,#A9\r\n  >
+    - Example poll, detection logged:
+      - *667057.0#31[0009],OK,#9A\r\n  667057,005,2019-09-05 09:42:06.834,STS,DC=60,PC=624,LV=12.6,T=21.5,DU=0.0,RU=0.0,XYZ=-0.06:0.94:-0.22,N=67.0,NP=39.0,#66\r\n  667057,006,2019-09-05 09:41:12.623,A69-1601,999,S=66.5,N=39.5,C=0,#7B\r\n  >
   - VR2C
     - <https://go.innovasea.com/vr2c_manual.pdf>
     - Example poll, no detection logged:
-      - *450281.0#20[0009],OK,#9A\n450281,221,2024-10-07 15:58:49,STS,DC=1229,PC=88504,LV=0.0,BV=3.5,BU=20.7,I=2.3,T=21.7,DU=0.1,RU=4.1,XYZ=-0.06:-0.28:-0.81,#7F>
+      - *450281.0#20[0009],OK,#9A\r\n  450281,221,2024-10-07 15:58:49,STS,DC=1229,PC=88504,LV=0.0,BV=3.5,BU=20.7,I=2.3,T=21.7,DU=0.1,RU=4.1,XYZ=-0.06:-0.28:-0.81,#7F\r\n  >
