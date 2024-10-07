@@ -1,6 +1,16 @@
 # Acoustic telemetry dashboard using the GitHub REST API
 
-## Initial references:
+## Tasks
+
+  - Code server-side munging of ingested data
+  - Commit to repository as CSV "database"
+  - Code transfer of data from ingest to build-dash steps of GHA
+  - Describe remote (field) server set up
+    - Needs: RS-485, cellular modem, libcurl or something like it
+      - shell script?
+  - [Convert into GitHub App](https://docs.github.com/en/apps/creating-github-apps/registering-a-github-app/registering-a-github-app)
+
+## Initial references
 
 ### GitHub Actions (GHA)
 
