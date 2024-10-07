@@ -1,4 +1,4 @@
-# Acoustic telemetry dashboard using the GitHub REST API
+# Build an acoustic telemetry dashboard using the GitHub REST API
 
 ## Tasks
 
