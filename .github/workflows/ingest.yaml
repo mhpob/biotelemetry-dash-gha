@@ -8,6 +8,7 @@ on:
     inputs:
       # To save bandwidth, input names will be somewhat non-specific
       #   i.e. "p" is lighter than "poll" as it saves 3 characters
+      #   Further note -- the GHA API call is so big that 3 chars wont matter
       p:
         description: 'Result from RTM poll'
         required: true
@@ -18,33 +19,37 @@ jobs:
   ingest-data:
     runs-on: ubuntu-latest
     steps:
-    - run: |
-        echo "Poll: ${{ inputs.p }}"
-    # - name: Check out repository
-    #   uses: actions/checkout@v4
+    - name: Check out repository
+      uses: actions/checkout@v4
 
-    # - name: Set up Quarto
-    #   uses: quarto-dev/quarto-actions/setup@v2
+    - name: Set up Quarto
+      uses: quarto-dev/quarto-actions/setup@v2
 
-    # - name: Set up R
-    #   uses: r-lib/actions/setup-r@v2
-    #   with:
-    #     use-public-rspm: true
+    - name: Set up R
+      uses: r-lib/actions/setup-r@v2
+      with:
+        use-public-rspm: true
 
-    # - name: Set up R packages
-    #   uses: r-lib/actions/setup-r-dependencies@v2
-    #   with:
-    #     packages:
-    #       any::data.table
-    #       any::knitr
-    #       any::testthat
-    #       any::quarto
+    - name: Set up R packages
+      uses: r-lib/actions/setup-r-dependencies@v2
+      with:
+        packages:
+          any::data.table
+          any::knitr
+          any::testthat
+          any::quarto
 
-    # - name: Munge data
-    #     #TBD ...
-    #     env:
-    #       date_time: ${{ inputs.p }}
-    #       transmitter: ${{ inputs.t }}
+    - name: Munge data
+      run: Rscript -e "source(\"work/parsers.R\");
+        parse_payload(${{ inputs.p }}, "parsed.csv")"
+
+    - name: Push CSV log
+      run: |
+          git config --global user.name 'gha update bot'
+          git config --global user.email 'mhpob@users.noreply.github.com'
+          git add --all
+          git commit --allow-empty -m "[auto] Build Dashboard $(TZ=America/New_York date +'%Y-%m-%d %H:%M')"
+          git push
      
     #    - name: Add to database
     #      # TBD ...
