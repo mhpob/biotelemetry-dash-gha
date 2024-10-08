@@ -36,7 +36,6 @@ jobs:
         packages:
           any::data.table
           any::knitr
-          any::testthat
           any::quarto
 
     - name: Munge data
