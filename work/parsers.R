@@ -97,12 +97,18 @@ parse_payload <- function(poll, out_file = 'data/parsed.csv') {
 
 parse_detections <- function(parsed_db) {
     parsed_db[, detections := gsub('""', '\"', detections)]
-    parsed_db[, detections := sapply(detections, function(.) {
-        as.data.table(eval(parse(text = .)))
+    
+    # detections <- as.data.table(eval(parse(text = parsed_db$detections)))
+
+    parsed_db[, detections := lapply(detections, function(.) {
+      as.data.table(eval(parse(text = .)))
     })]
 
-    detections <- rbindlist(parsed_db$detections)
-    detections[, datetimeutc := as.POSIXct(datetimeutc)]
+    detections <- rbindlist(parsed_db$detections, fill = TRUE)
+
+    detections <- detections[, lapply(.SD, type.convert, as.is = T)]
+    detections[, datetimeutc := as.POSIXct(datetimeutc, tz = 'UTC')]
+
     setorder(detections, datetimeutc)
 
     detections
