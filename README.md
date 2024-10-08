@@ -10,6 +10,20 @@
       - shell script?
   - [Convert into GitHub App](https://docs.github.com/en/apps/creating-github-apps/registering-a-github-app/registering-a-github-app)
 
+## General notes
+
+  - Setting up the GitHub Actions runner takes around 90 second as it involves
+  downloading and installing Quarto, R, and all dependencies of the quarto and 
+  knitr packages. Building the dashboard takes another 30s or so. Because of this,
+  it doesn't make much sense to rebuild the dashboard at a faster rate than every
+  5 minutes.
+  - I am assuming that data will be pulled from the cabled receiver using the RTM2
+  mode, AKA "block polling". This saves battery as the receiver can turn off its
+  serial port, and we can't really go too fast due to the limitations imposed by
+  having a fresh server and needing to download/install all of the programs (see
+  above). This means that the dashboard isn't really "live", just rebuilt at some
+  functional-enough frequency.
+
 ## Initial references
 
 ### GitHub Actions (GHA)
