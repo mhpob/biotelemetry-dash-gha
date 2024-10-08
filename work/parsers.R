@@ -57,23 +57,23 @@ parse_payload <- function(poll, out_file = 'data/parsed.csv') {
         }
       ) |>
 
-      # Remove leading characters
-      sapply(function(.) gsub("^..", "", .)) |>
+      # Remove leading and trailing characters, signal/noise/channel labels
+      sapply(function(.) gsub("^..|, ?$|[SNC]=", "", .)) |>
 
       # check for ADC
       lapply(function(.) {
           char_check <- gsub("[^,]", "", .) |> nchar()
-          if (char_check == 5) {
-              cols <- c("receiver", "rec_seq", "datetimeutc", "codespace", "tag", "")
-          } else if (char_check == 6) {
+          if (char_check == 4) {
+              cols <- c("receiver", "rec_seq", "datetimeutc", "codespace", "tag")
+          } else if (char_check == 5) {
              cols <- c("receiver", "rec_seq", "datetimeutc", "codespace", "tag",
-                      "sensor", "")
+                      "sensor")
+          } else if (char_check == 7) {
+             cols <- c("receiver", "rec_seq", "datetimeutc", "codespace", "tag",
+                      "signal", "noise", "channel")
           } else if (char_check == 8) {
              cols <- c("receiver", "rec_seq", "datetimeutc", "codespace", "tag",
-                      "signal", "noise", "channel", "")
-          } else if (char_check == 9) {
-             cols <- c("receiver", "rec_seq", "datetimeutc", "codespace", "tag",
-                      "sensor", "signal", "noise", "channel", "")
+                      "sensor", "signal", "noise", "channel")
           }
         
           fread(
@@ -81,7 +81,7 @@ parse_payload <- function(poll, out_file = 'data/parsed.csv') {
               col.names = cols,
               colClasses = 'character',
               fill = TRUE
-          )[, !""]
+          )
       }
       ) |>
       rbindlist(fill = TRUE) |> 
