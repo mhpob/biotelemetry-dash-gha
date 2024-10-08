@@ -1,14 +1,15 @@
 on:
-workflow_dispatch:
-  inputs:
-    s:
-      description: 'ASCII string'
-      required: true
-      type: string
+  workflow_dispatch:
+    # inputs:
+    #   s:
+    #     description: 'ASCII string'
+    #     required: true
+    #     type: string
 
 jobs:
   test-workflow:
     runs-on: ubuntu-latest
+
     steps:
 
     - name: Check out repository
@@ -32,6 +33,3 @@ jobs:
 
     - name: Munge data
         #TBD ...
-      env:
-        date_time: ${{ inputs.d }}
-        transmitter: ${{ inputs.t }}
