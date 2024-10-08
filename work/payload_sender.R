@@ -18,7 +18,8 @@ resp <- 'https://api.github.com/repos/mhpob/biotelemetry-dash-gha/actions/workfl
         "XYZ=-0.06:-0.28:-0.81,#7F",
         "450281,239,2024-10-07 20:02:07,A69-9001,6277,#A8",
         "450281,240,2024-10-07 20:07:12,A69-9001,6278,123,#A1>"
-                )
+                ) |> 
+                shQuote()
             )
         )
     ) |> 

@@ -31,4 +31,4 @@ jobs:
     - name: Run tests
       run: Rscript -e "source(\"work/parsers.R\");
           library(testthat);
-          test_dir("tests")"
+          test_dir(\"tests\")"
