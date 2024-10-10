@@ -46,7 +46,7 @@ jobs:
     - name: Build dashboard
       run: |
         cd dashboard
-        quarto render
+        quarto render index.qmd
 
     - name: Push log and dashboard
       run: |
