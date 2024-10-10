@@ -1,0 +1,180 @@
+---
+title: 'Pilot sturgeon alert system'
+format: dashboard
+---
+
+```{r}
+library(data.table)
+library(ggplot2)
+library(plotly)
+
+source('resp_parse.R')
+parsed_db <- fread('/data/db_parsed.csv')
+
+parsed_db[, detections := gsub('""', '\"', detections)]
+parsed_db[, detections := sapply(detections, function(.) {
+    as.data.table(eval(parse(text = .)))
+})]
+
+detections <- rbindlist(parsed_db$detections)
+detections_missed <- fread('/data/detections.csv', quote = "",
+    col.names = c('rec', 'datetimeutc', 'codespace', 'tag', 'status', 'hash'),
+    colClasses = 'character')
+detections <- rbind(detections, detections_missed, fill = T)
+detections[, datetimeutc := as.POSIXct(datetimeutc)]
+setorder(detections, datetimeutc)
+
+updated <- parsed_db[.N, receiver_time]
+attr(updated, "tzone") <- "America/New_York"
+```
+
+Last updated: `r updated`, eastern time
+
+# Sturgeon
+
+## Row {height=20%}
+
+```{r}
+#| content: valuebox
+#| title: "Total detections"
+
+list(
+    icon = "phone-vibrate",
+    color = "info",
+    value = parsed_db[.N, DC]
+)
+```
+
+```{r}
+#| content: valuebox
+#| title: "Number of fish"
+
+list(
+    icon = "fingerprint",
+    color = "warning",
+    value = uniqueN(detections$tag)
+)
+```
+
+```{r}
+#| content: valuebox
+#| title: "Water temperature"
+
+list(
+    icon = "thermometer-half",
+    color = "primary",
+    value = parsed_db[.N, T]
+)
+```
+
+## Row {.tabset height=80%}
+
+```{r}
+#| title: Detections
+ggplotly(
+    ggplot(parsed_db) +
+        geom_line(aes(x = receiver_time, y = DC)) +
+        labs(x = NULL, y = 'Fish detections') +
+        theme_minimal()
+)
+```
+
+```{r}
+#| title: Pings
+ggplotly(
+    ggplot(parsed_db) +
+        geom_line(aes(x = receiver_time, y = PC)) +
+        labs(x = NULL, y = 'Pings') +
+        theme_minimal()
+)
+```
+
+```{r}
+#| title: Raw detections
+plot_ly(
+    type = "table",
+    columnwidth = c(100, 100),
+    header = list(
+        values = c("Date/time (UTC)", "Transmitter"),
+        fill = list(color = c("grey", "grey")),
+        font = list(color = "white")
+    ),
+    cells = list(
+        values = rbind(
+            rev(format(detections$datetimeutc, "%Y-%m-%d %H:%M:%S")),
+            rev(paste(detections$codespace, detections$tag, sep = "-"))
+        )
+    )
+)
+```
+
+# System health
+
+## Row {.tabset}
+
+```{r}
+#| title: Water temp.
+
+ggplotly(
+    ggplot(parsed_db) +
+        geom_line(aes(x = receiver_time, y = T)) +
+        labs(x = NULL, y = 'Temperature (C)') +
+        theme_minimal()
+)
+```
+```{r}
+#| title: CPU temp.
+
+ggplotly(
+    ggplot(parsed_db) +
+    annotate('rect',
+        xmin = as.POSIXct(-Inf), xmax = as.POSIXct(Inf),
+        ymin = 70, ymax = Inf,
+        fill = 'red',
+        alpha = 0.2) +
+    annotate('rect',
+        xmin = as.POSIXct(-Inf), xmax = as.POSIXct(Inf),
+        ymin = 60, ymax = 70,
+        fill = "yellow",
+        alpha = 0.2) +
+    annotate('rect',
+        xmin = as.POSIXct(-Inf), xmax = as.POSIXct(Inf),
+        ymin = -Inf, ymax = 60,
+        fill = "lightgreen",
+        alpha = 0.2) +
+    geom_line(aes(x = cpu_time, y = cpu_temp)) +
+    labs(x = NULL, y = 'CPU temperature (C)') +
+    theme_minimal()
+)
+```
+
+## Row {.tabset}
+
+```{r}
+#| title: Battery voltage
+
+ggplotly(
+ggplot(parsed_db) +
+    geom_line(aes(x = receiver_time, y = BV)) +
+    labs(x = NULL, y = 'Battery voltage (V)') +
+    theme_minimal()
+)
+```
+```{r}
+#| title: Battery usage
+ggplotly(
+ggplot(parsed_db) +
+    geom_line(aes(x = receiver_time, y = BU)) +
+    labs(x = NULL, y = 'Battery used (%)') +
+    theme_minimal()
+)
+```
+```{r}
+#| title: Receiver draw
+ggplotly(
+ggplot(parsed_db) +
+    geom_line(aes(x = receiver_time, y = I)) +
+    labs(x = NULL, y = 'Current consumption (mA)') +
+    theme_minimal()
+)
+```
