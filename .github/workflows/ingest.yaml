@@ -43,10 +43,18 @@ jobs:
           git commit --allow-empty -m "[auto] Add to log $(TZ=America/New_York date +'%Y-%m-%d %H:%M')"
           git push
 
-    - name: Build dashboard
-      run: |
-        cd dashboard
-        quarto render index.qmd
+    # - name: Build dashboard
+    #   run: |
+    #     cd dashboard
+    #     quarto render index.qmd
+
+    - name: Render and Publish
+      uses: quarto-dev/quarto-actions/publish@v2
+      with:
+        target: gh-pages
+        path: dashboard
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Push dashboard
       run: |
