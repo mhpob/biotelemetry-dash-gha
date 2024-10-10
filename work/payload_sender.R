@@ -4,7 +4,7 @@ resp <- 'https://api.github.com/repos/mhpob/biotelemetry-dash-gha/actions/workfl
     request() |> 
     req_headers(
         Accept = "application/vnd.github+json",
-        Authorization = "Bearer <ADD TOKEN HERE!!!!>",
+        Authorization = "Bearer TOKEN",
         `X-GitHub-Api-Version` = "2022-11-28",
         .redact = "Authorization"
     ) |> 
