@@ -25,30 +25,31 @@ jobs:
     - name: Set up Quarto
       uses: quarto-dev/quarto-actions/setup@v2
 
-    - name: Set up R
-      uses: r-lib/actions/setup-r@v2
-      with:
-        use-public-rspm: true
+    - name: Set up r2u
+      uses: eddelbuettel/github-actions/r2u-setup@master
 
     - name: Set up R packages
-      uses: r-lib/actions/setup-r-dependencies@v2
-      with:
-        packages:
-          any::data.table
-          any::ggplot2
-          any::knitr
-          any::plotly
-          any::quarto
+      run: |
+        Rscript -e 'install.packages(c("data.table", "ggplot2", "plotly", \
+        "rmarkdown, "knitr", "quarto"))'
 
     - name: Munge data
       run: Rscript -e 'source("work/parsers.R"); parse_payload(${{ inputs.p }}, "data/parsed.csv")'
+
+    - name: Push CSV log
+      run: |
+          git config --global user.name 'gha update bot'
+          git config --global user.email 'mhpob@users.noreply.github.com'
+          git add --all
+          git commit --allow-empty -m "[auto] Add to log $(TZ=America/New_York date +'%Y-%m-%d %H:%M')"
+          git push
 
     - name: Build dashboard
       run: |
         cd dashboard
         quarto render index.qmd
 
-    - name: Push log and dashboard
+    - name: Push dashboard
       run: |
           git config --global user.name 'gha update bot'
           git config --global user.email 'mhpob@users.noreply.github.com'
