@@ -6,10 +6,10 @@ format: dashboard
 ```{r}
 library(data.table)
 library(ggplot2)
-# library(plotly)
+library(plotly)
 
-source('work/parsers.R')
-parsed_db <- fread('data/parsed.csv')
+source('../work/parsers.R')
+parsed_db <- fread('../data/parsed.csv')
 
 parsed_db[, detections := gsub('""', '\"', detections)]
 parsed_db[, detections := lapply(detections, function(.) {
