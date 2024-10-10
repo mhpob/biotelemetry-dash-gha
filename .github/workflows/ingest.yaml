@@ -39,7 +39,7 @@ jobs:
           any::quarto
 
     - name: Munge data
-      run: Rscript -e "source('work/parsers.R'); parse_payload(${{ inputs.p }}, 'parsed.csv')"
+      run: Rscript -e "source('work/parsers.R'); parse_payload(${{ inputs.p }}, './data/parsed.csv')"
 
     - name: Push CSV log
       run: |
