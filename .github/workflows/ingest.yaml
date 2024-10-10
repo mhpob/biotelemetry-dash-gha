@@ -35,12 +35,14 @@ jobs:
       with:
         packages:
           any::data.table
+          any::ggplot2
           any::knitr
+          any:plotly
           any::quarto
 
     - name: Munge data
       run: Rscript -e 'source("work/parsers.R"); parse_payload(${{ inputs.p }}, "data/parsed.csv")'
-      
+
     - name: Build dashboard
       run: |
         cd dashboard
