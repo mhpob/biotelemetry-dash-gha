@@ -30,8 +30,7 @@ jobs:
 
     - name: Set up R packages
       run: |
-        Rscript -e 'install.packages(c("data.table", "ggplot2", "plotly", \
-        "rmarkdown, "knitr", "quarto"))'
+        Rscript -e 'install.packages(c("data.table", "ggplot2", "plotly", "rmarkdown, "knitr", "quarto"))'
 
     - name: Munge data
       run: Rscript -e 'source("work/parsers.R"); parse_payload(${{ inputs.p }}, "data/parsed.csv")'
