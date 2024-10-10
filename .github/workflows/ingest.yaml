@@ -37,7 +37,7 @@ jobs:
           any::data.table
           any::ggplot2
           any::knitr
-          any:plotly
+          any::plotly
           any::quarto
 
     - name: Munge data
