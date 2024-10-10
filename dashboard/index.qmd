@@ -6,29 +6,24 @@ format: dashboard
 ```{r}
 library(data.table)
 library(ggplot2)
-library(plotly)
+# library(plotly)
 
-source('resp_parse.R')
-parsed_db <- fread('/data/db_parsed.csv')
+source('work/parsers.R')
+parsed_db <- fread('data/parsed.csv')
 
 parsed_db[, detections := gsub('""', '\"', detections)]
-parsed_db[, detections := sapply(detections, function(.) {
+parsed_db[, detections := lapply(detections, function(.) {
     as.data.table(eval(parse(text = .)))
 })]
 
 detections <- rbindlist(parsed_db$detections)
-detections_missed <- fread('/data/detections.csv', quote = "",
-    col.names = c('rec', 'datetimeutc', 'codespace', 'tag', 'status', 'hash'),
-    colClasses = 'character')
-detections <- rbind(detections, detections_missed, fill = T)
 detections[, datetimeutc := as.POSIXct(datetimeutc)]
 setorder(detections, datetimeutc)
 
 updated <- parsed_db[.N, receiver_time]
-attr(updated, "tzone") <- "America/New_York"
 ```
 
-Last updated: `r updated`, eastern time
+Last updated: `r updated` UTC
 
 # Sturgeon
 
@@ -120,31 +115,6 @@ ggplotly(
         geom_line(aes(x = receiver_time, y = T)) +
         labs(x = NULL, y = 'Temperature (C)') +
         theme_minimal()
-)
-```
-```{r}
-#| title: CPU temp.
-
-ggplotly(
-    ggplot(parsed_db) +
-    annotate('rect',
-        xmin = as.POSIXct(-Inf), xmax = as.POSIXct(Inf),
-        ymin = 70, ymax = Inf,
-        fill = 'red',
-        alpha = 0.2) +
-    annotate('rect',
-        xmin = as.POSIXct(-Inf), xmax = as.POSIXct(Inf),
-        ymin = 60, ymax = 70,
-        fill = "yellow",
-        alpha = 0.2) +
-    annotate('rect',
-        xmin = as.POSIXct(-Inf), xmax = as.POSIXct(Inf),
-        ymin = -Inf, ymax = 60,
-        fill = "lightgreen",
-        alpha = 0.2) +
-    geom_line(aes(x = cpu_time, y = cpu_temp)) +
-    labs(x = NULL, y = 'CPU temperature (C)') +
-    theme_minimal()
 )
 ```
 
