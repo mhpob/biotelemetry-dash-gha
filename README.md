@@ -1,30 +1,33 @@
 # Build an acoustic telemetry dashboard using the GitHub REST API
 
-## Tasks
-
-  - Code server-side munging of ingested data
-  - Commit to repository as CSV "database"
-  - Code transfer of data from ingest to build-dash steps of GHA
-  - Describe remote (field) server set up
-    - Needs: RS-485, cellular modem, libcurl or something like it
-      - shell script?
-  - [Convert into GitHub App](https://docs.github.com/en/apps/creating-github-apps/registering-a-github-app/registering-a-github-app)
+## Usage
 
 ## General notes
 
-  - Setting up the GitHub Actions runner takes around 90 second as it involves
+  - Setting up the GitHub Actions runner takes around 60 second as it involves
   downloading and installing Quarto, R, and all dependencies of the quarto and 
-  knitr packages. Building the dashboard takes another 30s or so. Because of this,
+  knitr packages. Building the dashboard takes another 10s or so. Because of this,
   it doesn't make much sense to rebuild the dashboard at a faster rate than every
-  5 minutes.
+  2 minutes.
   - I am assuming that data will be pulled from the cabled receiver using the RTM2
   mode, AKA "block polling". This saves battery as the receiver can turn off its
   serial port, and we can't really go too fast due to the limitations imposed by
   having a fresh server and needing to download/install all of the programs (see
   above). This means that the dashboard isn't really "live", just rebuilt at some
   functional-enough frequency.
+  - Concurrency needs to be addressed. This is currently safe for one cabled
+  receiver, but there can be issues if multiple receivers are sending data packets
+  resulting in multiple repository read/writes. GHA currently only supports one
+  queued job -- every other call will kill the operation in front of it.
 
-## Initial references
+## Future Tasks
+
+  - Describe remote (field) server set up
+    - Needs: RS-485, cellular modem, libcurl or something like it
+      - shell script?
+  - [Convert into GitHub App?](https://docs.github.com/en/apps/creating-github-apps/registering-a-github-app/registering-a-github-app)
+
+## References
 
 ### GitHub Actions (GHA)
 
@@ -33,6 +36,8 @@
     - <https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/accessing-contextual-information-about-workflow-runs#inputs-context>
   - Configuration of the GHA webhook
     - <https://docs.github.com/en/rest/actions/workflows?apiVersion=2022-11-28#create-a-workflow-dispatch-event>
+  - Lost souls hoping for a longer queue
+    - https://github.com/orgs/community/discussions/12835
 
 ### Quarto Dashboards
 
@@ -62,7 +67,7 @@
       - *450281.0#20[0009],OK,#9A\r\n  
       450281,221,2024-10-07 15:58:49,STS,DC=1229,PC=88504,LV=0.0,BV=3.5,BU=20.7,I=2.3,T=21.7,DU=0.1,RU=4.1,XYZ=-0.06:-0.28:-0.81,#7F\r\n  
       \>
-    -Example poll, detection logged:
+    - Example poll, detection logged:
       - *450281.0#20[0009],OK,#9A\r\n  
       450281,238,2024-10-07 20:13:49,STS,DC=1235,PC=88607,LV=0.0,BV=3.5,BU=20.8,I=2.4,T=22.8,DU=0.1,RU=4.1,XYZ=-0.06:-0.28:-0.81,#7F\r\n  
       450281,239,2024-10-07 20:02:07,A69-9001,6277,#A8\r\n  
