@@ -1,6 +1,30 @@
 # Build an acoustic telemetry dashboard using the GitHub REST API
 
+Check out the example dashboard here: <https://sturg-alert.obrien.page/>.
+
+Note that this is just an example -- the receiver was removed from the water on
+October 15, 2024 and is no longer transmitting data.
+
+![](readme_images/graphical_outline.jpg)
+
 ## Usage
+
+To give this a test:
+
+  1. [Clone this repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository). You can also fork it,
+    but make sure "Copy the `main` branch only" is *NOT* checked.
+  2. [Create a GitHub personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-fine-grained-personal-access-token)
+    with read and write access to actions. Make sure you save this somewhere!
+  3. In `Settings` > `Pages`, make sure `Source` is "Deploy from a branch" and 
+    `Branch` is "gh-pages".
+  4. Send the dashboard some data! You can do this a whole bunch of ways, including
+    using `curl` as in the image above; with the
+    [httr2 R package](https://httr2.r-lib.org/index.html) as in the example located in
+    [`work/payload_sender.R`](https://github.com/mhpob/biotelemetry-dash-gha/blob/main/work/payload_sender.R) (exchange the word
+    ["TOKEN" in line 7](https://github.com/mhpob/biotelemetry-dash-gha/blob/7f25c2318c00ae1b361b986271fcdea1b6dbcdd9/work/payload_sender.R#L7)
+    with your GitHub PAT and emember not to commit this line to GitHub!!); or,
+    after running it at least once, with the "Run workflow" button under `Actions` >
+    Create live dashboard.
 
 ## General notes
 
