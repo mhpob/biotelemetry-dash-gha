@@ -1,9 +1,22 @@
 # Build an acoustic telemetry dashboard using the GitHub REST API
 
-Check out the example dashboard here: <https://sturg-alert.obrien.page/>.
-
-Note that this is just an example -- the receiver was removed from the water on
+Check out an example dashboard here: <https://sturg-alert.obrien.page/>. Note
+that this is just an example -- the receiver was removed from the water on
 October 15, 2024 and is no longer transmitting data.
+
+This repository leverages GitHub Actions to build a dashboard displaying data sent
+in from a deployed Innovasea [Rx-LIVE](https://www.innovasea.com/wp-content/uploads/2023/05/Innovasea_rx_live_receiver.pdf)
+or [VR2C](https://go.innovasea.com/vr2c_manual.pdf) receiver. Data which have
+been pulled from the receiver using a remote computer (details on that soon) are
+sent via HTTP to the GitHub REST API (dummy example at 
+[`work/payload_sender.R`](<https://github.com/mhpob/biotelemetry-dash-gha/blob/main/work/payload_sender.R>)).
+This triggers a GitHub Action ([`ingest.yaml`](https://github.com/mhpob/biotelemetry-dash-gha/blob/main/.github/workflows/ingest.yaml)) that installs Quarto, R, and associated
+R packages; parses the data stream; logs it in a CSV "database"; and builds a
+[Quarto dashboard](https://quarto.org/docs/dashboards/).
+
+Code for the dashboard is under
+[`dashboard/index.qmd`](https://github.com/mhpob/biotelemetry-dash-gha/blob/main/dashboard/index.qmd)
+and can be adapted to your liking.
 
 ![](readme_images/graphical_outline.jpg)
 
