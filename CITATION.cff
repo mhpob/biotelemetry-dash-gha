@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- given-names: "Michael H. P."
+  family-names: "O'Brien"
+  email: obrien@umces.edu
+  affiliation: University of Maryland Center for Environmental Science
+  orcid: 'https://orcid.org/0000-0003-1420-6395'
+title: "Acoustic telemetry dashboard using the GitHub REST API"
+version: 1.0.0
+date-released: 2024-10-16
+url: "https://github.com/mhpob/biotelemetry-dash-gha"
